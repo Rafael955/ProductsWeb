@@ -1,0 +1,47 @@
+<div class="container mt-3"> 
+    <div class="row justify-content-center"> 
+        <div class="col-lg-12"> 
+            <div class="card shadow-lg"> 
+                <div class="card-body"> 
+                    <h2 class="card-title text-primary"> Cadastro de Produto</h2> 
+                    <p class="card-subtitle text-muted"> Preencha o formulário para incluir um produto.</p> 
+                    <hr>
+
+                    <div *ngIf="mensagem" class="alert alert-success mb-2 alert-dismissible">
+                        <strong>Sucesso!</strong> {{ mensagem }}
+                        <button (click)="mensagem = ''" type="button" class="btn-close" aria-label="Close"></button>
+                    </div>
+
+                    <form [formGroup]="form" (ngSubmit)="onSubmit()"> 
+                        <div class="mb-3">
+                            <label>Nome do produto:</label> <input type="text" class="form-control" formControlName="name" /> 
+                            <div class="text-danger" *ngIf="form.get('name')?.touched && form.get('name')?.invalid"> 
+                               Por favor, informe o nome do produto com pelo menos 8 caracteres. 
+                            </div>
+                         </div>
+                         <div class="mb-3">
+                            <label>Preço:</label> 
+                            <input type="text" class="form-control" formControlName="price" /> 
+                            <div class="text-danger" *ngIf="form.get('price')?.touched && form.get('price')?.invalid"> Por favor, informe o preço do produto com valor mínimo de 0.01. </div>
+                         </div>
+                         <div class="mb-3">
+                            <label>Quantidade:</label> <input type="text" class="form-control" formControlName="quantity" /> 
+                            <div class="text-danger" *ngIf="form.get('quantity')?.touched && form.get('quantity')?.invalid"> Por favor, informe a quantidade do produto com valor mínimo de 1. </div>
+                         </div>
+                         <div class="mb-3">
+                            <label>Selecione a categoria:</label> 
+                            <select class="form-select" formControlName="categoryId">
+                               <option value="">Escolha uma opção</option>
+                               <option value="{{category.id}}" *ngFor="let category of categorias">
+                                {{ category.name | uppercase }}
+                               </option>
+                            </select>
+                            <div class="text-danger" *ngIf="form.get('categoryId')?.touched && form.get('categoryId')?.invalid"> Por favor, selecione a categoria do produto. </div>
+                         </div>
+                         <div class="mb-3"> <input type="submit" class="btn btn-success" [disabled]="form.invalid" value="Realizar Cadastro"/> </div>
+                    </form> 
+                </div> 
+            </div> 
+        </div>
+    </div> 
+</div>
