@@ -5,13 +5,15 @@ import { Component } from '@angular/core';
 import { config } from '../../../config/environment';
 import { ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NgxMaskDirective } from 'ngx-mask';
 
 @Component({
   selector: 'app-edicao-produtos',
   imports: [
     CommonModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxMaskDirective
   ],
   templateUrl: './edicao-produtos.component.html',
   styleUrl: './edicao-produtos.component.css'
@@ -21,6 +23,7 @@ export class EdicaoProdutosComponent {
      categorias: any[] = [];
      produto: any;
      mensagem: string = '';
+     mensagem_erro: string = '';
      id: string = '';
    
     //construtor para inicializar bibliotecas
@@ -53,9 +56,9 @@ export class EdicaoProdutosComponent {
   
     //criando a estrutura do formulário
     form = new FormGroup({
-      name: new FormControl('', [Validators.required, Validators.minLength(8)]),
-      price: new FormControl('', [Validators.required, Validators.min(0.01)]),
-      quantity: new FormControl('', [Validators.required, Validators.min(1)]),
+      name: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(100)]),
+      price: new FormControl('', [Validators.required, Validators.min(0.01), Validators.max(999999)]),
+      quantity: new FormControl('', [Validators.required, Validators.min(1),Validators.max(99999)]),
       categoryId: new FormControl('', [Validators.required])
     });
   
@@ -68,6 +71,10 @@ export class EdicaoProdutosComponent {
           next: (data: any) => {
             //console.log(data);
             this.mensagem = data.message; //capturando a mensagem da API
+          }, error: (err) => {
+            console.error(err);
+            this.mensagem_erro = err.message;
+            // <insert code for what to do on failure>
           }
         })
     }

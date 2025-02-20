@@ -11,22 +11,34 @@
                         <strong>Sucesso!</strong> {{ mensagem }}
                         <button (click)="mensagem = ''" type="button" class="btn-close" aria-label="Close"></button>
                     </div>
+                    <div *ngIf="mensagem_erro" class="alert alert-danger mb-2 alert-dismissible">
+                        <strong>Erro!</strong> {{ mensagem_erro }}
+                        <button (click)="mensagem_erro = ''" type="button" class="btn-close" aria-label="Close"></button>
+                    </div>
 
                     <form [formGroup]="form" (ngSubmit)="onSubmit()"> 
                         <div class="mb-3">
                             <label>Nome do produto:</label> <input type="text" class="form-control" formControlName="name" /> 
-                            <div class="text-danger" *ngIf="form.get('name')?.touched && form.get('name')?.invalid"> 
+                            <div class="text-danger" *ngIf="form.get('name')?.touched && form.get('name')?.invalid && form.get('name')?.errors?.['minlength']"> 
                                Por favor, informe o nome do produto com pelo menos 8 caracteres. 
+                            </div>
+                            <div class="text-danger" *ngIf="form.get('name')?.touched && form.get('name')?.errors?.['maxlength']">
+                                Por favor, informe o nome do produto com no máximo 100 caracteres. 
                             </div>
                          </div>
                          <div class="mb-3">
                             <label>Preço:</label> 
-                            <input type="text" class="form-control" formControlName="price" /> 
-                            <div class="text-danger" *ngIf="form.get('price')?.touched && form.get('price')?.invalid"> Por favor, informe o preço do produto com valor mínimo de 0.01. </div>
+                            <input type="text" maxlength="10" mask="separator.2" thousandSeparator="." [leadZero]="true" class="form-control" formControlName="price" /> 
+                            <div class="text-danger" *ngIf="form.get('price')?.touched && form.get('price')?.invalid"> 
+                                Por favor, informe um preço do produto entre 0.01 e 999.999
+                            </div>
                          </div>
                          <div class="mb-3">
-                            <label>Quantidade:</label> <input type="text" class="form-control" formControlName="quantity" /> 
-                            <div class="text-danger" *ngIf="form.get('quantity')?.touched && form.get('quantity')?.invalid"> Por favor, informe a quantidade do produto com valor mínimo de 1. </div>
+                            <label>Quantidade:</label> 
+                            <input type="text" maxlength="6" mask="separator.0" thousandSeparator="." class="form-control" formControlName="quantity" /> 
+                            <div class="text-danger" *ngIf="form.get('quantity')?.touched && form.get('quantity')?.invalid"> 
+                                Por favor, informe a quantidade do produto entre 1 e 99999. 
+                            </div>
                          </div>
                          <div class="mb-3">
                             <label>Selecione a categoria:</label> 
@@ -38,7 +50,9 @@
                             </select>
                             <div class="text-danger" *ngIf="form.get('categoryId')?.touched && form.get('categoryId')?.invalid"> Por favor, selecione a categoria do produto. </div>
                          </div>
-                         <div class="mb-3"> <input type="submit" class="btn btn-success" [disabled]="form.invalid" value="Realizar Cadastro"/> </div>
+                         <div class="mb-3"> 
+                            <input type="submit" class="btn btn-success" [disabled]="form.invalid" value="Realizar Cadastro"/> 
+                        </div>
                     </form> 
                 </div> 
             </div> 
